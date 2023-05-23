@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { format, formatDistanceToNow } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
 
@@ -7,6 +8,8 @@ import { Avatar } from './Avatar'
 import { Comment } from './Comment'
 
 export function Post({ author, content, publishedAt }) {
+  const [comments, setComments] = useState(['Very good, Diego. Congrats! 👏'])
+
   // const publishedDateFormatted = new Intl.DateTimeFormat('en-US', {
   //   day: '2-digit',
   //   month: 'long',
@@ -23,6 +26,16 @@ export function Post({ author, content, publishedAt }) {
     locale: enUS,
     addSuffix: true,
   })
+
+  function handleCreateNewComment(event) {
+    event.preventDefault()
+
+    const newCommentText = event.target.comment.value
+
+    setComments([...comments, newCommentText])
+
+    event.target.comment.value = ''
+  }
 
   return (
     <article className={styles.post}>
@@ -54,15 +67,17 @@ export function Post({ author, content, publishedAt }) {
           }
         })}
       </div>
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Leave your feedback</strong>
-        <textarea placeholder="Leave your comment" />
+        <textarea name="comment" placeholder="Leave your comment" />
         <footer>
           <button type="submit">Publish</button>
         </footer>
       </form>
       <div className={styles.commentList}>
-        <Comment />
+        {comments.map((comment) => {
+          return <Comment content={comment} />
+        })}
       </div>
     </article>
   )
