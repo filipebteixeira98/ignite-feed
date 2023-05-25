@@ -10,6 +10,8 @@ import { Comment } from './Comment'
 export function Post({ author, content, publishedAt }) {
   const [comments, setComments] = useState(['Very good, Diego. Congrats! 👏'])
 
+  const [newCommentText, setNewCommentText] = useState('')
+
   // const publishedDateFormatted = new Intl.DateTimeFormat('en-US', {
   //   day: '2-digit',
   //   month: 'long',
@@ -30,11 +32,13 @@ export function Post({ author, content, publishedAt }) {
   function handleCreateNewComment(event) {
     event.preventDefault()
 
-    const newCommentText = event.target.comment.value
-
     setComments([...comments, newCommentText])
 
-    event.target.comment.value = ''
+    setNewCommentText('')
+  }
+
+  function handleNewCommentChange(event) {
+    setNewCommentText(event.target.value)
   }
 
   return (
@@ -69,7 +73,12 @@ export function Post({ author, content, publishedAt }) {
       </div>
       <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Leave your feedback</strong>
-        <textarea name="comment" placeholder="Leave your comment" />
+        <textarea
+          name="comment"
+          placeholder="Leave your comment"
+          value={newCommentText}
+          onChange={handleNewCommentChange}
+        />
         <footer>
           <button type="submit">Publish</button>
         </footer>
